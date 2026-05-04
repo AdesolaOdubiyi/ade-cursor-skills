@@ -44,6 +44,7 @@ After the agent runs, delete any skills you don't need from `.cursor/skills/`.
 | `caveman` | Ultra-brief communication mode |
 | `clean-code-reviewer` | Clean code standards review |
 | `debugging-systematic` | Structured bug diagnosis |
+| `design-to-build` | Design → phased TDD build → review gates with CONTEXT + architecture plan |
 | `grill-with-docs` | Stress-test plans against domain docs |
 | `improve-codebase-architecture` | Find refactoring opportunities |
 | `python-type-discipline` | Python typing standards |

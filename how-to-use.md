@@ -29,6 +29,7 @@ and used here with attribution. These include `tdd`, `improve-codebase-architect
     caveman/
     clean-code-reviewer/
     debugging-systematic/
+    design-to-build/
     grill-with-docs/
     improve-codebase-architecture/
     python-type-discipline/
@@ -123,6 +124,19 @@ persisting, state stuck in wrong value, or issues that survive a code change.
 
 **Trigger phrases:** "debug this", "diagnose this", "something is broken",
 "this is failing", "figure out why"
+
+---
+
+### `design-to-build`
+**What it does:** End-to-end workflow: structured grill and design locks, writes
+`CONTEXT.md` plus `docs/ARCHITECTURE_PLAN.md` and `docs/PROGRESS.md`, then phased TDD
+build with clean-code gate and final pre-merge / security review before ship.
+
+**When to use:** Large features, significant refactors, or any initiative that needs
+explicit decisions and checklists before implementation starts.
+
+**Trigger phrases:** "design to build", "/design-to-build", "run the full design build
+workflow", "I need CONTEXT and an architecture plan before coding"
 
 ---
 
