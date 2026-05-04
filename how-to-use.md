@@ -30,6 +30,7 @@ and used here with attribution. These include `tdd`, `improve-codebase-architect
     clean-code-reviewer/
     debugging-systematic/
     design-to-build/
+    frontend-pre-merge-reviewer/
     grill-with-docs/
     improve-codebase-architecture/
     python-type-discipline/
@@ -151,6 +152,22 @@ API contracts, or business logic.
 
 **Trigger phrases:** "review this", "pre-merge check", "backend review",
 "check before merging"
+
+---
+
+### `frontend-pre-merge-reviewer`
+**What it does:** Staff-level frontend merge gate for user-facing UI: traces props,
+state, effects, rendering, and realistic breakpoints (navigation, loading, races,
+a11y). Pair with **`ux-product`** so implementation matches agreed flows and states.
+Uses **web search** on the project’s framework stack (often TypeScript/React) to
+calibrate common pitfalls and failure modes against the actual diff — not generic
+lectures.
+
+**When to use:** Before merging any meaningful UI, client routing, or interaction
+change; use with `ux-product` when product intent was explicitly decided first.
+
+**Trigger phrases:** "frontend review", "pre-merge check UI", "review my React
+change", "check this frontend PR", "UX implementation review"
 
 ---
 
