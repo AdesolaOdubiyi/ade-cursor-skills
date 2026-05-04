@@ -9,22 +9,32 @@ Several skills in this set are adapted from [Matt Pocock's skills catalog](https
 
 Use this prompt with a Cursor agent:
 
-> Clone the skills repository at `https://github.com/adesolaodubiyi/ade-cursor-skills` into a temp directory, then copy the contents of the `skills/` folder into this project's `.cursor/skills/` directory (create it if it doesn't exist). Skip any skills listed below. Delete the temp clone when done.
+> Clone the skills repository at `https://github.com/adesolaodubiyi/ade-cursor-skills` into a temp directory, then copy:
+> - `skills/` into this project's `.cursor/skills/` (create it if needed)
+> - `rules/` into this project's `.cursor/rules/` (create it if needed)
+> Skip any skills listed below. Delete the temp clone when done.
 >
 > **Skills to skip:** *(list any you don't want, e.g. `security-auditor`, `tdd`)*
 >
-> After copying, list every skill folder that was created so I can confirm.
+> After copying, list every skill folder and rule file that was created so I can confirm.
 
-## Setting Up Agent Skills
+## Setting Up Agent Skills and Rules
 
 To install the standard Cursor skill set into this project, give the following prompt to a Cursor agent:
 
 > Clone `https://github.com/adesolaodubiyi/ade-cursor-skills` into a temp directory,
-> copy the `skills/` folder contents into `.cursor/skills/` (create it if needed),
-> skip any skills not relevant to this project, then delete the temp clone and list
-> what was installed.
+> copy `skills/` into `.cursor/skills/` and `rules/` into `.cursor/rules/`
+> (create both directories if needed), skip any skills not relevant to this
+> project, then delete the temp clone and list what was installed.
 
 After the agent runs, delete any skills you don't need from `.cursor/skills/`.
+
+### Available rules
+| Rule | Purpose |
+|---|---|
+| `baseline-coding-standard.mdc` | Naming, function design, error handling, comments, and module organization defaults |
+| `engineering-behavior.mdc` | Agent collaboration behavior and scope discipline |
+| `python-backend.mdc` | Python backend typing, logging, secrets, and boundary standards |
 
 ### Available skills
 | Skill | Purpose |
