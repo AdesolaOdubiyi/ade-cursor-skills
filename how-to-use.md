@@ -11,7 +11,7 @@ manual invocation.
 
 Several skills in this setup are authored by [Matt Pocock](https://github.com/mattpocock/skills)
 and used here with attribution. These include `tdd`, `improve-codebase-architecture`,
-`grill-with-docs`, and `write-a-skill`. His full skills library is worth exploring.
+`grill-with-docs`, `write-a-skill`, and `caveman`. His full skills library is worth exploring.
 
 ---
 
@@ -26,6 +26,7 @@ and used here with attribution. These include `tdd`, `improve-codebase-architect
   skills/
     architecture-and-api/
     backend-pre-merge-reviewer/
+    caveman/
     clean-code-reviewer/
     debugging-systematic/
     grill-with-docs/
@@ -229,6 +230,18 @@ before touching code.
 **When to use:** When you've identified a recurring workflow that doesn't have a skill yet, or when you want to encode a pattern so you don't repeat the same setup instructions every session.
 
 **Trigger phrases:** "create a skill for", "write a new skill", "encode this workflow", "build a skill that"
+
+---
+
+### `caveman` (by Matt Pocock)
+**What it does:** Switches the assistant into ultra-compressed communication mode:
+short, direct responses with technical substance preserved and filler removed.
+
+**When to use:** When you want lower token usage, tight back-and-forth loops,
+or terse execution updates.
+
+**Trigger phrases:** "caveman mode", "talk like caveman", "use caveman",
+"less tokens", "be brief"
 
 ---
 
