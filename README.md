@@ -18,16 +18,7 @@ Use this prompt with a Cursor agent:
 >
 > After copying, list every skill folder and rule file that was created so I can confirm.
 
-## Setting Up Agent Skills and Rules
-
-To install the standard Cursor skill set into this project, give the following prompt to a Cursor agent:
-
-> Clone `https://github.com/adesolaodubiyi/ade-cursor-skills` into a temp directory,
-> copy `skills/` into `.cursor/skills/` and `rules/` into `.cursor/rules/`
-> (create both directories if needed), skip any skills not relevant to this
-> project, then delete the temp clone and list what was installed.
-
-After the agent runs, delete any skills you don't need from `.cursor/skills/`.
+After the agent runs, delete any skills you do not need from `.cursor/skills/`.
 
 ### Available rules
 | Rule | Purpose |

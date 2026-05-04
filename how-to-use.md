@@ -74,6 +74,21 @@ can invoke them manually with `/skill-name`.
 
 ---
 
+## Start Here: `design-to-build`
+
+Before reading into individual skills further, I'd strongly recommend starting with
+`design-to-build`. In my experience, it is the highest-leverage skill in this set for
+non-trivial architectural work.
+
+It forces the agent through a specified workflow: structured design grilling, explicit
+decision capture, phased implementation with `/tdd`, then clean-code, pre-merge, and
+security gates before shipping. It orchestrates multiple skills so architecture,
+execution, and review stay aligned.
+
+Use this first when the work is bigger than a quick patch.
+
+---
+
 ### `systems-design`
 **What it does:** Walks through a design problem systematically — constraints,
 trade-offs, scalability, failure modes — before any code is written.
@@ -125,19 +140,6 @@ persisting, state stuck in wrong value, or issues that survive a code change.
 
 **Trigger phrases:** "debug this", "diagnose this", "something is broken",
 "this is failing", "figure out why"
-
----
-
-### `design-to-build`
-**What it does:** End-to-end workflow: structured grill and design locks, writes
-`CONTEXT.md` plus `docs/ARCHITECTURE_PLAN.md` and `docs/PROGRESS.md`, then phased TDD
-build with clean-code gate and final pre-merge / security review before ship.
-
-**When to use:** Large features, significant refactors, or any initiative that needs
-explicit decisions and checklists before implementation starts.
-
-**Trigger phrases:** "design to build", "/design-to-build", "run the full design build
-workflow", "I need CONTEXT and an architecture plan before coding"
 
 ---
 
