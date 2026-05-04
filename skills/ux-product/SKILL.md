@@ -15,3 +15,6 @@ description: Activate when designing, building, or reviewing any user-facing fea
 - Can users understand result quickly?
 - Is next action obvious?
 - Is trust/uncertainty communicated clearly?
+
+## After implementation (merge gate)
+Before merging UI changes, run **`frontend-pre-merge-reviewer`** to verify the code matches the decisions above (states, flow, edge cases) and to check framework-specific failure modes.
