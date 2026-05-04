@@ -1,37 +1,47 @@
 # [Project Name] — Domain Language
 
-Read this file at the start of every session. Use these terms exactly in code, tests, docs, and agent prompts.
+Read this file at the start of every session. It defines the canonical terms for this project.
+Use these terms exactly. Consistent language prevents AI drift across sessions.
 
-<!-- This file is domain vocabulary only. No phase tracking, no task lists, no implementation steps, no file paths unless they are part of a term's definition. -->
+---
 
 ## Language
 
-<!-- For each term: one sentence definition, then synonyms to avoid. Duplicate the block below. -->
+<!-- Define each term that is specific to this project or feature.
+     General programming concepts (hooks, middleware, handlers) do not belong here.
+     Only terms that could be confused or used inconsistently across sessions. -->
 
-**[Term]**: [One sentence definition.]
+**[Term]**:
+[One sentence definition of what it IS, not what it does.]
+_Avoid_: [synonym1], [synonym2]
 
-_Avoid_: [synonyms or overloaded words that mean something else in this repo]
+**[Term]**:
+[One sentence definition.]
+_Avoid_: [synonym]
 
-**[Term]**: [One sentence definition.]
-
-_Avoid_: [synonyms]
+---
 
 ## Relationships
 
-<!-- Cardinality between domain concepts. Example: Order 1 — N LineItem -->
+<!-- Express how domain terms relate to each other. Use cardinality where obvious. -->
 
-- **[Concept A]** → **[Concept B]**: [relationship, e.g. one-to-many, owns, references]
+- A **[Term]** contains one or more **[Term]**
+- A **[Term]** belongs to exactly one **[Term]**
+
+---
 
 ## Example Dialogue
 
-<!-- Short exchange between engineer and domain expert using ONLY terms from Language above. -->
+<!-- A short conversation demonstrating how the terms interact naturally.
+     This helps AI agents understand boundaries between related concepts. -->
 
-**Engineer:** [question using canonical terms]
+> **Dev:** "When a **[Term]** is [action], does a **[Term]** get created immediately?"
+> **Domain expert:** "No — a **[Term]** is only created after **[Term]** is confirmed."
 
-**Domain:** [answer using same terms]
+---
 
 ## Flagged Ambiguities
 
-<!-- Record conflicts that were resolved so nobody reopens them casually. Format: term / conflict / resolution. -->
+<!-- Call out any term that was used inconsistently and how it was resolved. -->
 
-- **[Term or area]**: [what was ambiguous] → [how it was resolved]
+- "[word]" was used to mean both **[Term A]** and **[Term B]** — resolved: these are distinct.

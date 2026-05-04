@@ -1,42 +1,58 @@
 # [Project Name] — Progress
 
-This document tracks current working state. It shrinks as phases complete — remove finished items; do not strike through.
+This document tracks the current working state. It shrinks as phases complete.
+For the full plan, decisions, and risk register, see `docs/ARCHITECTURE_PLAN.md`.
+
+---
 
 ## Current Phase
 
-> Phase [N] — [Name]
+> **Phase [N] — [Phase Name]**
+> [One sentence description of what this phase accomplishes.]
 
-[One sentence: what “done” means for this phase.]
+---
 
 ## What Is Done
 
-<!-- Starts empty at kickoff. As work completes, either delete this section when empty or list only the last completed milestone in one line if helpful. -->
+<!-- Move items here when their phase is fully validated. Remove entire phase blocks once complete. -->
 
-_(Nothing yet.)_
+*(Nothing yet)*
+
+---
 
 ## What Is Active Right Now
 
-<!-- Checkbox list copied from the current phase in docs/ARCHITECTURE_PLAN.md. -->
+<!-- Copy the checklist from ARCHITECTURE_PLAN.md for the current phase.
+     Remove items as they are completed and validated. -->
 
-- [ ] [Task]
-- [ ] [Task]
+- [ ] [Task 1]
+- [ ] [Task 2]
+- [ ] [Task 3]
 
-**Validation for this phase:** [Exact criteria from the architecture plan — tests, metrics, manual checks.]
+**Validation criteria for this phase:**
+[Copy the validation statement from ARCHITECTURE_PLAN.md verbatim.]
+
+---
 
 ## What Is Next
 
-[Two or three sentences: the next phase name, what unlocks it, and the first concrete action once this phase is ticked complete.]
+**Phase [N+1] — [Next Phase Name]**
+[Two to three sentences describing what the next phase will do and why it comes after this one.]
+
+---
 
 ## Hard Constraints
 
-<!-- Copy non-negotiables from docs/ARCHITECTURE_PLAN.md (performance, compatibility, security, deadlines). -->
+<!-- Things that must never happen during this migration. Copy from ARCHITECTURE_PLAN.md. -->
 
-- [Constraint]
+- Do not [constraint 1]
+- Do not [constraint 2]
+- Always reference the `/tdd` skill at the start of any implementation session
+
+---
 
 ## Deferred Work
 
-<!-- Items explicitly deferred; note which skill to use when picked up. -->
+<!-- Anything intentionally not in scope for this build. Reference the skill to use when ready. -->
 
-| Item | Skill to use later |
-|------|--------------------|
-| [Deferred item] | e.g. `improve-codebase-architecture`, `technical-docs-writer` |
+- [Deferred item] — use `/improve-codebase-architecture` when ready
