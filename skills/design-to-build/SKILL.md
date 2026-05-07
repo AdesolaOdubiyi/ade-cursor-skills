@@ -3,7 +3,8 @@ name: design-to-build
 description: |
   End-to-end workflow for designing, architecting, and safely building any non-trivial feature,
   refactor, or system. Runs a structured grill session to surface constraints and lock in decisions,
-  produces CONTEXT.md (domain language) and docs/ARCHITECTURE_PLAN.md + docs/PROGRESS.md, then
+  produces CONTEXT.md (domain language), KNOWLEDGEBASE.md (engineering + product memory),
+  and docs/ARCHITECTURE_PLAN.md + docs/PROGRESS.md, then
   guides phased TDD implementation with clean code review, pre-merge review, and security audit
   at each gate. Use when starting a large feature, significant refactor, or anything that requires
   design decisions before a single line of code is written.
@@ -19,7 +20,7 @@ Before anything else, check the repo for existing docs.
 → Go to [phases/DESIGN.md](phases/DESIGN.md)
 
 **Resume** — both files exist:
-→ Read `CONTEXT.md`, `docs/ARCHITECTURE_PLAN.md`, and `docs/PROGRESS.md`
+→ Read `CONTEXT.md`, `KNOWLEDGEBASE.md`, `docs/ARCHITECTURE_PLAN.md`, and `docs/PROGRESS.md`
 → Identify the current active phase in `docs/PROGRESS.md`
 → Jump directly to [phases/BUILD.md](phases/BUILD.md) at the correct phase
 
@@ -45,7 +46,8 @@ Full instructions for each phase:
 | File | Purpose | Lifecycle |
 |------|---------|-----------|
 | `CONTEXT.md` | Domain language glossary — canonical terms for this project | Established in Design phase; updated only when new terms are resolved |
+| `KNOWLEDGEBASE.md` | Working memory of product intent + relevant engineering context for the current initiative | Created in Design phase; updated when decisions are confirmed or new constraints surface |
 | `docs/ARCHITECTURE_PLAN.md` | Full plan: all decisions, phases with checkboxes, risks, future work | Created in Design phase; checkboxes tick as phases complete; nothing else changes |
 | `docs/PROGRESS.md` | Active working state: current phase, open tasks, what is next | Created in Design phase; shrinks as phases complete; deleted or archived when done |
 
-Templates for all three documents: [templates/](templates/)
+Templates for all documents: [templates/](templates/)

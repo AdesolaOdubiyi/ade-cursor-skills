@@ -35,10 +35,11 @@ After the agent runs, delete any skills you do not need from `.cursor/skills/`.
 | `caveman` | Ultra-brief communication mode |
 | `clean-code-reviewer` | Clean code standards review |
 | `debugging-systematic` | Structured bug diagnosis |
-| `design-to-build` | Design → phased TDD build → review gates with CONTEXT + architecture plan |
+| `design-to-build` | Design → phased TDD build → review gates with CONTEXT + KNOWLEDGEBASE + architecture plan |
 | `frontend-pre-merge-reviewer` | UI merge review with ux-product alignment + framework-aware failure modes |
 | `grill-with-docs` | Stress-test plans against domain docs |
 | `improve-codebase-architecture` | Find refactoring opportunities |
+| `python-top-down` | Enforce top-down Python module ordering for readability |
 | `python-type-discipline` | Python typing standards |
 | `readme-writer` | README generation |
 | `security-auditor` | Adversarial multi-pass security audit |

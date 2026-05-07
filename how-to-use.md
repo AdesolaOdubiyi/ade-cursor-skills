@@ -33,6 +33,7 @@ and used here with attribution. These include `tdd`, `improve-codebase-architect
     frontend-pre-merge-reviewer/
     grill-with-docs/
     improve-codebase-architecture/
+    python-top-down/
     python-type-discipline/
     readme-writer/
     security-auditor/
@@ -81,9 +82,9 @@ Before reading into individual skills further, I'd strongly recommend starting w
 non-trivial architectural work.
 
 It forces the agent through a specified workflow: structured design grilling, explicit
-decision capture, phased implementation with `/tdd`, then clean-code, pre-merge, and
-security gates before shipping. It orchestrates multiple skills so architecture,
-execution, and review stay aligned.
+decision capture, `CONTEXT.md` + `KNOWLEDGEBASE.md` memory docs, phased implementation
+with `/tdd`, then clean-code, pre-merge, and security gates before shipping. It
+orchestrates multiple skills so architecture, execution, and review stay aligned.
 
 Use this first when the work is bigger than a quick patch.
 
@@ -221,6 +222,19 @@ or doing a typing pass on existing code.
 
 ---
 
+### `python-top-down`
+**What it does:** Enforces top-down Python module structure so readers see public API
+and high-level orchestration first, then private helpers and low-level utilities.
+Useful for readability and maintainability in medium/large modules.
+
+**When to use:** Writing, reviewing, or refactoring Python modules (especially when a
+function is hard to find, or module ordering is confusing).
+
+**Trigger phrases:** "top-down structure", "module ordering", "python readability",
+"why is this function hard to find"
+
+---
+
 ### `grill-with-docs` (by Matt Pocock)
 **What it does:** Same relentless interview style as a classic "grill me" session,
 but grounded in your repo: stress-tests the plan against the domain model,
@@ -320,13 +334,9 @@ based on what you're building.
 ### Backend API Feature (Python)
 
 ```
-1. grill-with-docs   → challenge the approach before designing (update CONTEXT/ADRs)
-2. systems-design    → constraints, trade-offs, failure modes
-3. architecture-and-api → lock the API contracts
-4. build             → base rules + python-type-discipline active
-5. tdd               → vertical slices, behavior-level tests
-6. backend-pre-merge-reviewer → pre-merge risk check
-7. security-auditor  → if the feature touches auth or sensitive data
+1. design-to-build   → run the full design → phased build → review workflow
+2. During build phases: apply python-type-discipline where signatures/models change
+3. In review phase: backend-pre-merge-reviewer (+ security-auditor if sensitive paths changed)
 ```
 
 ---
@@ -334,11 +344,10 @@ based on what you're building.
 ### Frontend Feature + Backend Integration
 
 ```
-1. ux-product        → user goal and flow clarity first
-2. architecture-and-api → lock the API payloads before building both sides
-3. build             → implement UI and endpoint changes
-4. tdd               → behavior-level integration coverage
-5. clean-code-reviewer → readability pass
+1. ux-product        → clarify user goal and flow before implementation
+2. design-to-build   → execute full workflow (design docs, phased TDD, review gates)
+3. In review phase: frontend-pre-merge-reviewer + backend-pre-merge-reviewer
+4. Add security-auditor if auth, persistence, env vars, or external APIs changed
 ```
 
 ---
@@ -358,8 +367,8 @@ based on what you're building.
 ```
 1. security-auditor  → run as the primary process, multi-pass
    (keep other review skills off during the audit to avoid conflicting signals)
-2. After audit closes: remediation happens in the normal build flow
-   (systems-design / architecture-and-api + tdd)
+2. After audit closes: for non-trivial remediation, route work through design-to-build
+   so fixes are designed, implemented in phases, and re-reviewed before ship
 ```
 
 ---
@@ -377,12 +386,9 @@ based on what you're building.
 ### Starting a New Project
 
 ```
-1. grill-with-docs   → validate the idea and surface blind spots
-2. systems-design    → architecture and constraints
-3. ux-product        → if user-facing
-4. architecture-and-api → define module boundaries and API contracts
-5. technical-docs-writer → document the architecture before building
-   (reference doc while building saves re-explaining to the agent later)
+1. design-to-build   → establish CONTEXT + architecture plan + phased execution path
+2. ux-product        → run during design/build if the project is user-facing
+3. technical-docs-writer → document modules/architecture as phases complete
 ```
 
 ---

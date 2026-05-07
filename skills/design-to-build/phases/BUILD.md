@@ -4,7 +4,7 @@ Governs phased implementation after Design is approved. Each architecture-plan p
 
 ## Before every build session
 
-1. Read `CONTEXT.md`, `docs/PROGRESS.md`, and `docs/ARCHITECTURE_PLAN.md`.
+1. Read `CONTEXT.md`, `KNOWLEDGEBASE.md`, `docs/PROGRESS.md`, and `docs/ARCHITECTURE_PLAN.md`.
 2. State explicitly: **I am reading and following the `/tdd` skill for this session.**
 3. Read and follow the `/tdd` skill for all implementation work in this session.
 
@@ -39,6 +39,7 @@ Repeat for **every** phase listed in `docs/ARCHITECTURE_PLAN.md` until all imple
 - Tick the completed checkboxes in `docs/ARCHITECTURE_PLAN.md` for this phase only.
 - Remove completed tasks from `docs/PROGRESS.md` (shrink the file — do not strike through).
 - Promote the next phase to active in `docs/PROGRESS.md` (current phase, active checklist, validation, what is next).
+- Update `KNOWLEDGEBASE.md` only when a design decision is confirmed, a new hard constraint appears, or product/engineering context changes in a way future sessions must remember.
 
 ## Phase 0 — Housekeeping rule
 
