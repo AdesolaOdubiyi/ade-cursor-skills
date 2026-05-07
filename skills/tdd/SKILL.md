@@ -7,103 +7,124 @@ description: Test-driven development with red-green-refactor loop. Use when user
 
 ## Philosophy
 
-**Core principle**: Tests should verify behavior through public interfaces, not implementation details. Code can change entirely; tests shouldn't.
+**Core principle**: Tests verify intent, not implementation. The question is not "does the code do what the code does?" — that is tautologically true and catches nothing. The question is "does the system do what the business needs?"
 
-**Good tests** are integration-style: they exercise real code paths through public APIs. They describe _what_ the system does, not _how_ it does it. A good test reads like a specification - "user can checkout with valid cart" tells you exactly what capability exists. These tests survive refactors because they don't care about internal structure.
+**Good tests** exercise real code paths through public interfaces, describe capability ("user can checkout with valid cart"), and survive internal refactors. If renaming an internal function breaks a test, that test was checking implementation.
 
-**Bad tests** are coupled to implementation. They mock internal collaborators, test private methods, or verify through external means (like querying a database directly instead of using the interface). The warning sign: your test breaks when you refactor, but behavior hasn't changed. If you rename an internal function and tests fail, those tests were testing implementation, not behavior.
+**The coverage trap**: 90% coverage built of AI-generated tests is often 90% "works as implemented" and 0% "works as designed." Coverage is a lagging signal, not a quality signal.
+
+**The AI entropy problem**: AI writes code → AI writes tests → two divergent layers, zero convergence. The AI tests validate the AI code's behavior, not your intent. You now have two layers of "works as implemented" and zero layers of "works as designed."
+
+**The fix — human-AI split**: You write test names and intent. AI fills setup boilerplate. The name is the spec: `test_user_creation_fails_when_email_already_exists_and_returns_409`. That sentence is a requirement. An AI-generated name like `test_user_creation` is a description of the code. You own the convergence step; AI owns the typing.
 
 See [tests.md](tests.md) for examples and [mocking.md](mocking.md) for mocking guidelines.
 
+---
+
 ## Anti-Pattern: Horizontal Slices
 
-**DO NOT write all tests first, then all implementation.** This is "horizontal slicing" - treating RED as "write all tests" and GREEN as "write all code."
-
-This produces **crap tests**:
-
-- Tests written in bulk test _imagined_ behavior, not _actual_ behavior
-- You end up testing the _shape_ of things (data structures, function signatures) rather than user-facing behavior
-- Tests become insensitive to real changes - they pass when behavior breaks, fail when behavior is fine
-- You outrun your headlights, committing to test structure before understanding the implementation
-
-**Correct approach**: Vertical slices via tracer bullets. One test → one implementation → repeat. Each test responds to what you learned from the previous cycle. Because you just wrote the code, you know exactly what behavior matters and how to verify it.
+**DO NOT write all tests first, then all implementation.** Tests written in bulk check imagined behavior. Tests written vertically respond to what you just learned.
 
 ```
-WRONG (horizontal):
-  RED:   test1, test2, test3, test4, test5
-  GREEN: impl1, impl2, impl3, impl4, impl5
-
-RIGHT (vertical):
-  RED→GREEN: test1→impl1
-  RED→GREEN: test2→impl2
-  RED→GREEN: test3→impl3
-  ...
+WRONG: RED: test1,2,3,4,5  →  GREEN: impl1,2,3,4,5
+RIGHT: RED→GREEN: test1→impl1,  test2→impl2,  test3→impl3 ...
 ```
+
+---
 
 ## Workflow
 
-### 1. Planning
+### 0. Declare and Confirm (always first)
 
-When exploring the codebase, use the project's domain glossary so that test names and interface vocabulary match the project's language, and respect ADRs in the area you're touching.
+Before writing any test, declare what you are testing and why — at the capability level, not the implementation level. Get the user to confirm:
 
-Before writing any code:
+> "I'm going to write tests for **[capability or contract being verified]**.
+> Key properties being asserted: [2–3 bullets].
+> Does this match what you expect?"
 
-- [ ] Confirm with user what interface changes are needed
-- [ ] Confirm with user which behaviors to test (prioritize)
-- [ ] Identify opportunities for [deep modules](deep-modules.md) (small interface, deep implementation)
-- [ ] Design interfaces for [testability](interface-design.md)
-- [ ] List the behaviors to test (not implementation steps)
-- [ ] Get user approval on the plan
+Do not proceed without confirmation. This is the human convergence step. Skip it and you risk testing what was built, not what was intended.
 
-Ask: "What should the public interface look like? Which behaviors are most important to test?"
+### 1. Plan
 
-**You can't test everything.** Confirm with the user exactly which behaviors matter most. Focus testing effort on critical paths and complex logic, not every possible edge case.
+Use the project's domain glossary for test names. Identify which behaviors matter most — you cannot test everything. Write test names yourself before touching implementation. Confirm the list with the user.
 
-### 2. Tracer Bullet
+Consult [deep-modules.md](deep-modules.md) and [interface-design.md](interface-design.md) before finalizing interfaces.
 
-Write ONE test that confirms ONE thing about the system:
+### 2. Red → Green Loop
 
 ```
-RED:   Write test for first behavior → test fails
-GREEN: Write minimal code to pass → test passes
+RED:   Write one test for one behavior → fails
+GREEN: Write minimal code to pass → passes
+Repeat for each remaining behavior.
 ```
 
-This is your tracer bullet - proves the path works end-to-end.
+One test at a time. Only enough code to pass the current test. No speculative features.
 
-### 3. Incremental Loop
+### 3. Refactor
 
-For each remaining behavior:
+After all green: extract duplication, deepen modules, apply SOLID where natural. Run tests after each refactor step. **Never refactor while RED.**
 
+See [refactoring.md](refactoring.md).
+
+---
+
+## Beyond Pure Functions: Side Effects, Convergence, LLM Output
+
+The loop above is ideal for pure functions. Three additional patterns apply when the system involves side effects, stage pipelines, or non-deterministic components (LLM calls, network I/O).
+
+### Stage contract tests
+
+When a function's contract IS its side effect (writes files, populates a temp dir, updates DB state), test the produced artifact — not whether the internal write calls were made.
+
+```python
+# Bad: tests the call chain
+assert mock_github_client.get_file.call_count == 3
+
+# Good: tests what the next stage actually receives
+assert (temp_dir / "get_ticket" / "get_issues.py").exists()
+assert len(list(temp_dir.rglob("*.py"))) == expected_file_count
 ```
-RED:   Write next test → fails
-GREEN: Minimal code to pass → passes
+
+Mocking the side effect away makes you test your mock, not your function.
+
+### Convergence tests
+
+When two code paths must produce equivalent intermediate state (e.g. ZIP upload and GitHub upload both routed through the same chunker), run both real paths and assert equivalence. Mocks defeat this test's purpose — both mocked paths will always "pass" regardless of whether the real paths actually converge.
+
+```python
+zip_chunks = parse_codebase(extract_zip_to(fixture_zip, tmp_path / "zip"))
+gh_chunks  = parse_codebase(fixture_github_dir)   # same codebase, different delivery
+
+assert {c.file_path for c in zip_chunks} == {c.file_path for c in gh_chunks}
+assert len(zip_chunks) == len(gh_chunks)
 ```
 
-Rules:
+### Property assertions for LLM and non-deterministic output
 
-- One test at a time
-- Only enough code to pass current test
-- Don't anticipate future tests
-- Keep tests focused on observable behavior
+Never assert exact LLM output text. Assert semantic properties. Run N=3–5 real trials on a fixed input fixture — one passing trial proves nothing for a non-deterministic component.
 
-### 4. Refactor
+```python
+# Bad: one mocked call, exact output assertion
+mock_llm.return_value = '{"auth_mechanism": "HMAC"}'
+assert result == {"auth_mechanism": "HMAC"}
 
-After all tests pass, look for [refactor candidates](refactoring.md):
+# Good: N real calls, property assertion on every run
+for _ in range(5):
+    result = extract_evidence(fixture_chunks)    # real LLM call, fixed input
+    assert "auth_mechanism" in result            # property: key always present
+    assert result["auth_mechanism"] is not None  # property: never null for this input
+```
 
-- [ ] Extract duplication
-- [ ] Deepen modules (move complexity behind simple interfaces)
-- [ ] Apply SOLID principles where natural
-- [ ] Consider what new code reveals about existing code
-- [ ] Run tests after each refactor step
-
-**Never refactor while RED.** Get to GREEN first.
+---
 
 ## Checklist Per Cycle
 
 ```
-[ ] Test describes behavior, not implementation
-[ ] Test uses public interface only
-[ ] Test would survive internal refactor
-[ ] Code is minimal for this test
-[ ] No speculative features added
-```
+[ ] Declare + confirm step done before any test is written
+[ ] Test name is human-written: it is the spec, not a description of the code
+[ ] Test verifies intent (what is needed), not implementation (what the code does)
+[ ] Test uses public interface only; would survive an internal refactor
+[ ] For side-effect functions: artifact tested, not call chain mocked
+[ ] For convergence points: both real paths exercised, no mock on the convergence
+[ ] For LLM/non-deterministic output: N=3 property assertions, not 1 exact-output assertion
+[ ] Code is minimal for this test; no speculative features added
