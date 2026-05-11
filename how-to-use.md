@@ -10,8 +10,8 @@ manual invocation.
 ## Credits
 
 Several skills in this setup are authored by [Matt Pocock](https://github.com/mattpocock/skills)
-and used here with attribution. These include `tdd`, `improve-codebase-architecture`,
-`grill-with-docs`, `write-a-skill`, and `caveman`. His full skills library is worth exploring.
+and used here with attribution. These include `improve-codebase-architecture`,
+`grill-with-docs`, `write-a-skill`, and `caveman`. His full skills library and further information he provides about agentic development is worth exploring.
 
 ---
 
@@ -48,7 +48,7 @@ and used here with attribution. These include `tdd`, `improve-codebase-architect
 
 ## Rules
 
-Rules are always-on constraints. You don't invoke them — they load automatically
+Rules are always-on constraints. You don't invoke them. They load automatically
 and shape how the agent writes code in every session.
 
 ### `baseline-coding-standard`
@@ -59,18 +59,19 @@ why not what.
 
 ### `engineering-behavior`
 Defines how the agent behaves as an engineer: confirms requirements before writing
-code, proposes architecture before implementing, thinks in trade-offs, doesn't
+code, proposes architecture before implementing, thinks in trade-offs, and doesn't
 over-engineer. The meta-rule that governs agent conduct across all tasks.
 
 ### `python-backend`
 Python-specific standards: typing discipline, backend patterns, idiomatic Python
-conventions. Activates automatically on `.py` files.
+conventions. Activates automatically on `.py` files. Included since they frequently develop in Python. 
+You can create one for any specific language
 
 ---
 
 ## Skills
 
-Skills are on-demand. They activate when you use a trigger phrase in chat, or you
+Skills are on demand. They activate when you use a trigger phrase in chat, or you
 can invoke them manually with `/skill-name`.
 
 ---
@@ -117,7 +118,7 @@ contracts, endpoints, or module interfaces.
 
 ---
 
-### `tdd` (by Matt Pocock)
+### `tdd` (assisted by Matt Pocock, edited by myself)
 **What it does:** Drives feature development and bug fixes with a red-green-refactor
 loop. One vertical slice at a time — one test, one implementation, repeat. Tests
 verify behavior through public interfaces, not implementation details.
