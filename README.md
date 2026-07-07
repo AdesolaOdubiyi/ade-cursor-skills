@@ -49,17 +49,20 @@ Remove any skills you don't need after the agent runs.
 |---|---|
 | `architecture-and-api` | Module structure and API design |
 | `backend-pre-merge-reviewer` | Pre-merge backend code review |
+| `build-with-confidence` | TDD + multi-pass review loops + acceptance verification for full feature builds |
 | `caveman` | Ultra-brief communication mode |
 | `clean-code-reviewer` | Clean code standards review |
 | `debugging-systematic` | Structured bug diagnosis |
 | `design-to-build` | Design → phased TDD build → review gates with CONTEXT + KNOWLEDGEBASE + architecture plan |
 | `frontend-pre-merge-reviewer` | UI merge review with ux-product alignment and framework-aware failure modes |
+| `frontend-visual-design` | Anti-AI-slop visual design process (mockup-first, primitives-first implementation); pairs with `ux-product` |
 | `grill-with-docs` | Stress-test plans against domain docs |
 | `improve-codebase-architecture` | Find refactoring opportunities |
 | `python-top-down` | Enforce top-down Python module ordering |
 | `python-type-discipline` | Python typing standards |
 | `readme-writer` | README generation |
 | `security-auditor` | Adversarial multi-pass security audit |
+| `stop-slop` | Remove AI writing patterns from prose |
 | `systems-design` | Systems design with trade-off analysis and pushback protocol |
 | `tdd` | Test-driven development loop |
 | `technical-docs-writer` | Technical documentation |
