@@ -2,6 +2,8 @@
 
 Reusable rules and skills for software engineering workflows — primarily backend, but covering the full stack. Drop them into any project to encode repeatable engineering processes so you stop re-explaining the same standards to an agent every session.
 
+Works with Cursor, Claude Code, Codex, Windsurf, and any agent that supports SKILL.md-style skill files or equivalent rule injection.
+
 See `how-to-use.md` for workflow guidance and sample prompts.
 
 ## Credits
@@ -17,7 +19,8 @@ Jump down to the end of the prompt for the "skills-to-skip" list, edit it, then 
 > First, identify which agent you are (Cursor, Claude Code, Codex, Windsurf, etc.).
 > Then use web browse to look up the correct file paths and formats for rules and skills
 > for your specific agent — for example, Cursor uses `.cursor/rules/` and `.cursor/skills/`,
-> while Claude Code uses `CLAUDE.md` for rules. Use the conventions native to your agent.
+> while Claude Code uses `.claude/skills/` for skills and `CLAUDE.md` for rules (convert
+> `.mdc` rule files to inline prose). Use the conventions native to your agent.
 >
 > Then fetch and clone `https://github.com/adesolaodubiyi/ade-cursor-skills` into a temp
 > directory and install:
@@ -48,20 +51,21 @@ Remove any skills you don't need after the agent runs.
 | Skill | Purpose |
 |---|---|
 | `architecture-and-api` | Module structure and API design |
-| `backend-pre-merge-reviewer` | Pre-merge backend code review |
-| `build-with-confidence` | TDD + multi-pass review loops + acceptance verification for full feature builds |
+| `backend-pre-merge-reviewer` | Pre-merge backend code review with MUST FIX / SHOULD FIX / NIT tiering |
 | `caveman` | Ultra-brief communication mode |
 | `clean-code-reviewer` | Clean code standards review |
 | `debugging-systematic` | Structured bug diagnosis |
-| `design-to-build` | Design → phased TDD build → review gates with CONTEXT + KNOWLEDGEBASE + architecture plan |
+| `design-to-build` | Blank-slate workflow: design grilling → docs → phased TDD → review gates |
 | `frontend-pre-merge-reviewer` | UI merge review with ux-product alignment and framework-aware failure modes |
-| `frontend-visual-design` | Anti-AI-slop visual design process (mockup-first, primitives-first implementation); pairs with `ux-product` |
-| `grill-with-docs` | Stress-test plans against domain docs |
-| `improve-codebase-architecture` | Find refactoring opportunities |
+| `frontend-visual-design` | Anti-AI-slop visual design process (mockup-first, primitives-first implementation) |
+| `grilling` | One-question-at-a-time decision grilling sub-skill |
+| `grill-with-docs` | Stress-test plans against domain docs and ADRs |
+| `implement` | Full implementation loop: context → search (+ dissent) → architecture lock → TDD → review → ship |
+| `improve-codebase-architecture` | Find deepening opportunities (YAGNI-first, HTML report, ADR conflict detection) |
 | `python-top-down` | Enforce top-down Python module ordering |
 | `python-type-discipline` | Python typing standards |
 | `readme-writer` | README generation |
-| `security-auditor` | Adversarial multi-pass security audit |
+| `security-auditor` | Adversarial multi-pass security audit (≥8/10 confidence threshold) |
 | `stop-slop` | Remove AI writing patterns from prose |
 | `systems-design` | Systems design with trade-off analysis and pushback protocol |
 | `tdd` | Test-driven development loop |

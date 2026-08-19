@@ -16,7 +16,7 @@ Report findings to the user first. Surface surprises, contradictions, and unknow
 
 ## Step 2 — Grill session
 
-Follow the `/grill-me` skill: one question at a time, wait for an answer, then continue.
+Follow the `grill-with-docs` skill: one question at a time, wait for an answer, then continue.
 
 For each question:
 

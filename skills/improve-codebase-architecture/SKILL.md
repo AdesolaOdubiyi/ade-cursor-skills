@@ -34,7 +34,9 @@ This skill is _informed_ by the project's domain model. The domain language give
 
 Read the project's domain glossary and any ADRs in the area you're touching first.
 
-Then use the Agent tool with `subagent_type=Explore` to walk the codebase. Don't follow rigid heuristics — explore organically and note where you experience friction:
+**YAGNI-first scoping:** Before scanning broadly, run `git log --oneline -50` to find hot spots — files that change most frequently are where friction lives. Start your exploration there.
+
+Then walk the codebase organically and note where you experience friction:
 
 - Where does understanding one concept require bouncing between many small modules?
 - Where are modules **shallow** — interface nearly as complex as the implementation?
@@ -55,17 +57,27 @@ Present a numbered list of deepening opportunities. For each candidate:
 
 **Use CONTEXT.md vocabulary for the domain, and [LANGUAGE.md](LANGUAGE.md) vocabulary for the architecture.** If `CONTEXT.md` defines "Order," talk about "the Order intake module" — not "the FooBarHandler," and not "the Order service."
 
-**ADR conflicts**: if a candidate contradicts an existing ADR, only surface it when the friction is real enough to warrant revisiting the ADR. Mark it clearly (e.g. _"contradicts ADR-0007 — but worth reopening because…"_). Don't list every theoretical refactor an ADR forbids.
+**ADR conflicts**: if a candidate contradicts an existing ADR in `docs/adr/` or `docs/decisions/`, surface it with a `⚠️ ADR conflict` callout — include which ADR and why it conflicts. Do not silently skip the candidate; let the user decide whether it warrants reopening the ADR.
 
 Do NOT propose interfaces yet. Ask the user: "Which of these would you like to explore?"
 
-### 3. Grilling loop
+**After presenting candidates, generate an HTML report** at `$TMPDIR/architecture-review.html`:
 
-Once the user picks a candidate, drop into a grilling conversation. Walk the design tree with them — constraints, dependencies, the shape of the deepened module, what sits behind the seam, what tests survive.
+```html
+<!-- Self-contained, Tailwind CDN + Mermaid CDN -->
+<!-- Each candidate: card with name, current vs proposed diagram (ASCII or Mermaid),
+     recommendation badge (Strong / Worth exploring / Speculative), rationale -->
+<!-- Top section: "Top recommendation" with the single highest-leverage candidate -->
+```
+
+Open it: `open $TMPDIR/architecture-review.html` (macOS) or `xdg-open $TMPDIR/architecture-review.html` (Linux). Tell the user the file path.
+
+### 3. Decision loop
+
+Once the user picks a candidate, use the `grilling` skill to walk the design tree — constraints, dependencies, the shape of the deepened module, what sits behind the seam, what tests survive.
 
 Side effects happen inline as decisions crystallize:
 
-- **Naming a deepened module after a concept not in `CONTEXT.md`?** Add the term to `CONTEXT.md` — same discipline as `/grill-with-docs` (see [CONTEXT-FORMAT.md](../grill-with-docs/CONTEXT-FORMAT.md)). Create the file lazily if it doesn't exist.
+- **Naming a deepened module after a concept not in `CONTEXT.md`?** Add the term to `CONTEXT.md` — same discipline as `grill-with-docs` (see [CONTEXT-FORMAT.md](../grill-with-docs/CONTEXT-FORMAT.md)). Create the file lazily if it doesn't exist.
 - **Sharpening a fuzzy term during the conversation?** Update `CONTEXT.md` right there.
 - **User rejects the candidate with a load-bearing reason?** Offer an ADR, framed as: _"Want me to record this as an ADR so future architecture reviews don't re-suggest it?"_ Only offer when the reason would actually be needed by a future explorer to avoid re-suggesting the same thing — skip ephemeral reasons ("not worth it right now") and self-evident ones. See [ADR-FORMAT.md](../grill-with-docs/ADR-FORMAT.md).
-- **Want to explore alternative interfaces for the deepened module?** See [INTERFACE-DESIGN.md](INTERFACE-DESIGN.md).

@@ -68,6 +68,9 @@ Mark all Uncertain findings with unresolvable evidence as explicitly unresolved.
 Produce the final report. Close the session.
 Do not offer to run another pass. The session is closed.
 
+## Confidence Threshold
+A finding must have confidence ≥ 8/10 before it is reported in the main findings. Every finding must include a concrete exploit scenario — specific inputs, attacker position, and what breaks. Plausible-but-vague concerns go in a separate "Low confidence / worth watching" section, not in the main findings.
+
 ## Core Rules
 - Never report a finding you cannot cite at function level
 - Never assume product behavior — ask the user

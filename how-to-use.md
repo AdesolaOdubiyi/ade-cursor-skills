@@ -1,11 +1,10 @@
-# Cursor Skills & Rules — How to Use
+# AI Skills & Rules — How to Use
 
-A personal toolkit of Cursor rules and agent skills built for production-quality
+A personal toolkit of rules and agent skills built for production-quality
 engineering work. Covers the full stack with a backend-heavy bias.
 
-Feel free to drop these into your own `.cursor/` directory and adapt them to your
-project. The rules apply automatically; the skills activate by trigger phrase or
-manual invocation.
+Works with Cursor, Claude Code, Codex, Windsurf, and any agent that supports
+SKILL.md-style skill files or equivalent rule injection.
 
 ## Credits
 
@@ -15,33 +14,71 @@ and used here with attribution. These include `improve-codebase-architecture`,
 
 ---
 
-## What's in Here
+## Installing
+
+### Cursor
+
+Drop into `.cursor/` in your project or workspace:
 
 ```
 .cursor/
   rules/
-    baseline-coding-standard.mdc   ← always on
-    engineering-behavior.mdc       ← always on
-    python-backend.mdc             ← always on for Python files
+    baseline-coding-standard.mdc
+    engineering-behavior.mdc
+    python-backend.mdc
   skills/
     architecture-and-api/
     backend-pre-merge-reviewer/
-    caveman/
-    clean-code-reviewer/
-    debugging-systematic/
-    design-to-build/
-    frontend-pre-merge-reviewer/
-    grill-with-docs/
-    improve-codebase-architecture/
-    python-top-down/
-    python-type-discipline/
-    readme-writer/
-    security-auditor/
-    systems-design/
-    tdd/
-    technical-docs-writer/
-    ux-product/
-    write-a-skill/
+    ...
+```
+
+### Claude Code
+
+Skills go in `.claude/skills/` — each folder contains a `SKILL.md` that Claude Code loads automatically when invoked. Rules go inline in `CLAUDE.md` (convert `.mdc` content to prose).
+
+```
+.claude/
+  skills/
+    implement/
+    backend-pre-merge-reviewer/
+    ...
+CLAUDE.md   ← paste rule content here
+```
+
+Use the install prompt in `README.md` to have the agent handle the conversion automatically.
+
+---
+
+## What's in Here
+
+```
+rules/
+  baseline-coding-standard.mdc   ← always on
+  engineering-behavior.mdc       ← always on
+  python-backend.mdc             ← always on for Python files
+skills/
+  architecture-and-api/
+  backend-pre-merge-reviewer/
+  caveman/
+  clean-code-reviewer/
+  debugging-systematic/
+  design-to-build/
+  frontend-pre-merge-reviewer/
+  frontend-visual-design/
+  grilling/
+  grill-with-docs/
+  implement/
+  improve-codebase-architecture/
+  python-top-down/
+  python-type-discipline/
+  readme-writer/
+  security-auditor/
+  stop-slop/
+  systems-design/
+  tdd/
+  technical-docs-writer/
+  ux-product/
+  write-a-skill/
 ```
 
 ---
@@ -76,18 +113,33 @@ can invoke them manually with `/skill-name`.
 
 ---
 
-## Start Here: `design-to-build`
+## Choosing the Right Workflow
 
-Before reading into individual skills further, I'd strongly recommend starting with
-`design-to-build`. In my experience, it is the highest-leverage skill in this set for
-non-trivial architectural work.
+**"I have a spec and need to build it"** → `implement`
+Step-by-step: confirm context, search best practices (with dissenting sources), lock architecture, TDD slices, review loop, explicit pause for your sign-off, then ship.
 
-It forces the agent through a specified workflow: structured design grilling, explicit
-decision capture, `CONTEXT.md` + `KNOWLEDGEBASE.md` memory docs, phased implementation
-with `/tdd`, then clean-code, pre-merge, and security gates before shipping. It
-orchestrates multiple skills so architecture, execution, and review stay aligned.
+**"I'm starting from scratch and don't know what to build yet"** → `design-to-build`
+Blank-slate: structured grilling session, creates CONTEXT.md + KNOWLEDGEBASE.md + architecture plan, then phases into TDD build with review gates.
 
-Use this first when the work is bigger than a quick patch.
+Use `design-to-build` to figure out what to build. Use `implement` to build it.
+
+---
+
+### `implement`
+**What it does:** Full implementation loop from spec to ship. Confirms context, searches best practices with cited sources (and actively looks for dissenting perspectives to surface real tradeoffs), locks architecture before any code is written, builds in TDD vertical slices with code quality constraints, runs review loop, pauses for your sign-off, then ships.
+
+**When to use:** Any time you have a clear requirement and the feature touches more than one layer or requires a design decision. The default for non-trivial work.
+
+**Trigger phrases:** "implement this", "build this", "let's implement", "start the implementation loop"
+
+---
+
+### `design-to-build`
+**What it does:** End-to-end workflow for blank-slate work — structured design grilling, explicit decision capture, `CONTEXT.md` + `KNOWLEDGEBASE.md` memory docs, phased implementation with `tdd`, then review gates before shipping.
+
+**When to use:** Starting a new feature from scratch, significant refactor, or anything that requires design decisions before a single line of code is written. Use this before `implement` when you don't yet know what to build.
+
+**Trigger phrases:** "design this", "let's design and build", "start from scratch", "design-to-build"
 
 ---
 
@@ -124,7 +176,7 @@ loop. One vertical slice at a time — one test, one implementation, repeat. Tes
 verify behavior through public interfaces, not implementation details.
 
 **When to use:** Building any non-trivial feature or fixing a bug where locking
-down behavior matters.
+down behavior matters. Called automatically by `implement`.
 
 **Trigger phrases:** "build this with TDD", "test-first", "red green refactor",
 "write tests for this"
@@ -149,10 +201,10 @@ persisting, state stuck in wrong value, or issues that survive a code change.
 **What it does:** Rigorous pre-merge review of backend code — traces the full
 request lifecycle, checks auth gaps, race conditions, partial failures, contract
 drift, secret handling, and error handling. Assumes the code was AI-generated and
-reviews accordingly. Produces a structured findings report with a final verdict.
+reviews accordingly. Produces a structured findings report with MUST FIX / SHOULD FIX / NIT tiering and a final verdict.
 
 **When to use:** Before merging any backend change that touches auth, data access,
-API contracts, or business logic.
+API contracts, or business logic. Called automatically by `implement`.
 
 **Trigger phrases:** "review this", "pre-merge check", "backend review",
 "check before merging"
@@ -163,9 +215,8 @@ API contracts, or business logic.
 **What it does:** Staff-level frontend merge gate for user-facing UI: traces props,
 state, effects, rendering, and realistic breakpoints (navigation, loading, races,
 a11y). Pair with **`ux-product`** so implementation matches agreed flows and states.
-Uses **web search** on the project’s framework stack (often TypeScript/React) to
-calibrate common pitfalls and failure modes against the actual diff — not generic
-lectures.
+Uses **web search** on the project's framework stack to calibrate common pitfalls
+against the actual diff — not generic lectures.
 
 **When to use:** Before merging any meaningful UI, client routing, or interaction
 change; use with `ux-product` when product intent was explicitly decided first.
@@ -179,11 +230,10 @@ change", "check this frontend PR", "UX implementation review"
 **What it does:** Reviews code for readability, maintainability, and best practices.
 Checks naming, function design, complexity, dead code, comment quality, and
 structure. Web-searches current best practices for the detected language before
-reviewing. Produces violations only — no praise, no suggestions for already-clean
-code. Issues a final verdict.
+reviewing. Issues a final verdict.
 
 **When to use:** When you want a maintainability pass independent of security or
-backend risk. Good for frontend code, utilities, and any non-backend logic.
+backend risk.
 
 **Trigger phrases:** "review this code", "cleanliness check", "code quality review",
 "is this clean", "maintainability review"
@@ -197,14 +247,14 @@ backend risk. Good for frontend code, utilities, and any non-backend logic.
 ---
 
 ### `security-auditor`
-**What it does:** Multi-pass adversarial security audit. Assumes the code was
-written by an opposing agent with intent to introduce undetectable vulnerabilities.
-Runs until no further evidence-backed findings can be found. Every finding requires
-function-level citation and a confidence score — no hunches get reported. Produces
+**What it does:** Multi-pass adversarial security audit. Every finding requires ≥8/10
+confidence and a concrete exploit scenario — specific inputs, attacker position, what
+breaks. Plausible-but-vague concerns go in a separate low-confidence section. Produces
 a versioned cumulative report across passes.
 
 **When to use:** Before shipping anything security-sensitive, after adding auth,
-when integrating third-party services, or as a dedicated security sprint.
+when integrating third-party services, or as a dedicated security sprint. Called
+automatically by `implement`.
 
 **Trigger phrases:** "security audit", "audit this codebase", "find vulnerabilities",
 "adversarial review", "security check"
@@ -213,8 +263,7 @@ when integrating third-party services, or as a dedicated security sprint.
 
 ### `python-type-discipline`
 **What it does:** Enforces strict typing hygiene in Python — function signatures,
-Pydantic models, return types, typed error handling. Focused on interface and
-model design rather than broad backend conventions.
+Pydantic models, return types, typed error handling.
 
 **When to use:** When refactoring Python interfaces, adding Pydantic models,
 or doing a typing pass on existing code.
@@ -226,23 +275,34 @@ or doing a typing pass on existing code.
 ### `python-top-down`
 **What it does:** Enforces top-down Python module structure so readers see public API
 and high-level orchestration first, then private helpers and low-level utilities.
-Useful for readability and maintainability in medium/large modules.
 
-**When to use:** Writing, reviewing, or refactoring Python modules (especially when a
-function is hard to find, or module ordering is confusing).
+**When to use:** Writing, reviewing, or refactoring Python modules.
 
 **Trigger phrases:** "top-down structure", "module ordering", "python readability",
 "why is this function hard to find"
 
 ---
 
+### `grilling`
+**What it does:** One-question-at-a-time decision grilling. Asks a single targeted
+question, provides a recommended answer, waits, pushes back on risky answers, then
+moves to the next. Used as a sub-skill inside `grill-with-docs` and
+`improve-codebase-architecture`.
+
+**When to use:** Standalone when you want to stress-test a specific decision or
+assumption without the full docs-grounding context of `grill-with-docs`.
+
+**Trigger phrases:** "grill me on this decision", "one question at a time", "stress-test this"
+
+---
+
 ### `grill-with-docs` (by Matt Pocock)
-**What it does:** Same relentless interview style as a classic "grill me" session,
-but grounded in your repo: stress-tests the plan against the domain model,
-sharpens terminology, and updates `CONTEXT.md` / `docs/adr/` as decisions land.
+**What it does:** Stress-tests a plan against the repo's domain model — challenges
+terminology against `CONTEXT.md`, cross-references decisions against ADRs, updates
+docs inline as decisions land. Delegates the grilling loop to the `grilling` skill.
 
 **When to use:** Before starting any significant task when the project already has
-(or should have) shared context docs. Especially useful before `systems-design`.
+(or should have) shared context docs. Use before `systems-design`.
 
 **Trigger phrases:** "grill me on this", "grill with docs", "stress-test this plan",
 "challenge my approach", "what am I missing"
@@ -251,8 +311,7 @@ sharpens terminology, and updates `CONTEXT.md` / `docs/adr/` as decisions land.
 
 ### `ux-product`
 **What it does:** Frames work in terms of user goals and product outcomes before
-implementation. Clarifies user state, flow, and intent. Useful for making sure
-UI and product decisions are grounded in what the user actually needs.
+implementation. Clarifies user state, flow, and intent.
 
 **When to use:** Frontend feature work, product decision-making, or any time
 you're building something user-facing and want to think through the experience
@@ -263,19 +322,23 @@ before touching code.
 
 ---
 
-### `improve-codebase-architecture` (by Matt Pocock)
-**What it does:** Finds deepening opportunities in a codebase — refactors that turn shallow modules into deep ones. Explores organically for architectural friction: tightly-coupled modules, untestable seams, shallow interfaces. Works best alongside a CONTEXT.md and docs/adr/ for domain context.
+### `improve-codebase-architecture` (by Matt Pocock, updated)
+**What it does:** Finds deepening opportunities — refactors that turn shallow modules
+into deep ones. YAGNI-first: starts with git log hot spots, not a broad scan.
+Generates an HTML report with recommendation cards. Flags ADR conflicts. Delegates
+the decision loop to the `grilling` skill.
 
-**When to use:** When a codebase is becoming hard to navigate, when modules feel too small and too coupled, or periodically as a code health practice. Matt Pocock recommends running it every few days.
+**When to use:** When a codebase is becoming hard to navigate, when modules feel too
+small and too coupled, or periodically as a code health practice.
 
 **Trigger phrases:** "improve the architecture", "find refactoring opportunities", "codebase health check", "this feels like a ball of mud"
 
 ---
 
 ### `write-a-skill` (by Matt Pocock)
-**What it does:** Helps you build new SKILL.md files using a structured template. Interviews you on the use case, generates the skill with correct frontmatter, and validates it follows the lean, token-efficient format.
+**What it does:** Helps you build new SKILL.md files using a structured template.
 
-**When to use:** When you've identified a recurring workflow that doesn't have a skill yet, or when you want to encode a pattern so you don't repeat the same setup instructions every session.
+**When to use:** When you've identified a recurring workflow that doesn't have a skill yet.
 
 **Trigger phrases:** "create a skill for", "write a new skill", "encode this workflow", "build a skill that"
 
@@ -295,8 +358,7 @@ or terse execution updates.
 
 ### `readme-writer`
 **What it does:** Writes or rewrites project READMEs in a direct engineering
-voice — no AI filler, no justification language, no teacher voice. Adapts
-structure to project type (library, service, data pipeline, portfolio project).
+voice — no AI filler, no justification language, no teacher voice.
 
 **When to use:** Creating or updating a project README.
 
@@ -307,9 +369,7 @@ structure to project type (library, service, data pipeline, portfolio project).
 ### `technical-docs-writer`
 **What it does:** Writes module-level technical documentation as a navigable
 system — top-level README describes full architecture, each module README
-describes itself and leads to the next. Designed so an engineer with no other
-resources can read from the top down and understand the system well enough to
-make changes.
+describes itself and leads to the next.
 
 **When to use:** Documenting a full codebase, writing module READMEs, or
 creating architecture documentation.
@@ -320,38 +380,36 @@ creating architecture documentation.
 > **Docs lane guide:**
 > - Project README → `readme-writer`
 > - System/module documentation → `technical-docs-writer`
-> Don't run both at once unless doing a top-level README + module docs
-> in separate explicit steps.
 
 ---
 
 ## Sample Workflows
 
-These are the patterns that get the most out of this toolkit. Mix and match
-based on what you're building.
+### Non-trivial feature (spec in hand)
 
----
+```
+1. implement         → context confirm → search → architecture lock → TDD → review → your sign-off → ship
+```
+
+### Blank-slate feature (no spec yet)
+
+```
+1. grill-with-docs   → align on language and existing constraints first
+2. design-to-build   → structured grilling → docs → phased TDD → review → ship
+```
 
 ### Backend API Feature (Python)
 
 ```
-1. design-to-build   → run the full design → phased build → review workflow
-2. During build phases: apply python-type-discipline where signatures/models change
-3. In review phase: backend-pre-merge-reviewer (+ security-auditor if sensitive paths changed)
+1. implement         → full loop; apply python-type-discipline where signatures/models change
 ```
-
----
 
 ### Frontend Feature + Backend Integration
 
 ```
 1. ux-product        → clarify user goal and flow before implementation
-2. design-to-build   → execute full workflow (design docs, phased TDD, review gates)
-3. In review phase: frontend-pre-merge-reviewer + backend-pre-merge-reviewer
-4. Add security-auditor if auth, persistence, env vars, or external APIs changed
+2. implement         → full loop; use frontend-pre-merge-reviewer + backend-pre-merge-reviewer in review phase
 ```
-
----
 
 ### Non-Trivial Bug
 
@@ -361,18 +419,12 @@ based on what you're building.
 3. backend-pre-merge-reviewer → if the bug touched a critical backend path
 ```
 
----
-
 ### Security Audit Sprint
 
 ```
 1. security-auditor  → run as the primary process, multi-pass
-   (keep other review skills off during the audit to avoid conflicting signals)
-2. After audit closes: for non-trivial remediation, route work through design-to-build
-   so fixes are designed, implemented in phases, and re-reviewed before ship
+2. After audit closes: route remediation through implement
 ```
-
----
 
 ### Documentation Pass
 
@@ -384,16 +436,6 @@ based on what you're building.
 
 ---
 
-### Starting a New Project
-
-```
-1. design-to-build   → establish CONTEXT + architecture plan + phased execution path
-2. ux-product        → run during design/build if the project is user-facing
-3. technical-docs-writer → document modules/architecture as phases complete
-```
-
----
-
 ## Tips
 
 **Don't stack review skills simultaneously.** `clean-code-reviewer`,
@@ -401,15 +443,11 @@ based on what you're building.
 lens. Running all three at once produces noise. Pick one per pass by objective.
 
 **Scope your asks.** If you ask the agent to "analyze the codebase," it will
-scan broadly and miss things. Ask it to analyze a specific module. The more
-scoped the ask, the deeper the agent goes.
+scan broadly and miss things. Ask it to analyze a specific module.
 
-**`grill-with-docs` before `systems-design`.** It sounds redundant but it isn't.
-`grill-with-docs` challenges whether you're solving the right problem and aligns
-language with the repo. `systems-design` solves the problem correctly. They do
-different things.
+**`grill-with-docs` before `systems-design`.** `grill-with-docs` challenges
+whether you're solving the right problem. `systems-design` solves the problem
+correctly. They do different things.
 
 **Write module READMEs as you build.** Use `technical-docs-writer` after
-finishing each module, not at the end of the project. The agent will use those
-READMEs as navigation aids in future sessions instead of re-scanning files
-it's already seen.
+finishing each module, not at the end of the project.

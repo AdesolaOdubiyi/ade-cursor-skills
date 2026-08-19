@@ -5,19 +5,17 @@ description: Grilling session that challenges your plan against the existing dom
 
 <what-to-do>
 
-Interview me relentlessly about every aspect of this plan until we reach a shared understanding. Walk down each branch of the design tree, resolving dependencies between decisions one-by-one. For each question, provide your recommended answer.
+Stress-test the plan against the project's existing domain model and documented decisions.
 
-Ask the questions one at a time, waiting for feedback on each question before continuing.
+Before asking anything, explore the codebase for `CONTEXT.md`, `docs/adr/`, and any architecture docs. If a question can be answered by reading the code or docs, read them instead of asking.
 
-If a question can be answered by exploring the codebase, explore the codebase instead.
+Then run the `grilling` skill to work through open questions one at a time.
 
 </what-to-do>
 
 <supporting-info>
 
 ## Domain awareness
-
-During codebase exploration, also look for existing documentation:
 
 ### File structure
 
@@ -33,23 +31,9 @@ Most repos have a single context:
 └── src/
 ```
 
-If a `CONTEXT-MAP.md` exists at the root, the repo has multiple contexts. The map points to where each one lives:
+If a `CONTEXT-MAP.md` exists at the root, the repo has multiple contexts. The map points to where each one lives.
 
-```
-/
-├── CONTEXT-MAP.md
-├── docs/
-│   └── adr/                          ← system-wide decisions
-├── src/
-│   ├── ordering/
-│   │   ├── CONTEXT.md
-│   │   └── docs/adr/                 ← context-specific decisions
-│   └── billing/
-│       ├── CONTEXT.md
-│       └── docs/adr/
-```
-
-Create files lazily — only when you have something to write. If no `CONTEXT.md` exists, create one when the first term is resolved. If no `docs/adr/` exists, create it when the first ADR is needed.
+Create files lazily — only when you have something to write.
 
 ## During the session
 
