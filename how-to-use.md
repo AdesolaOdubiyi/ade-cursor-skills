@@ -69,9 +69,11 @@ skills/
   grill-with-docs/
   implement/
   improve-codebase-architecture/
+  post-rebase-verify/
   python-top-down/
   python-type-discipline/
   readme-writer/
+  review-loop/
   security-auditor/
   stop-slop/
   systems-design/
@@ -198,10 +200,7 @@ persisting, state stuck in wrong value, or issues that survive a code change.
 ---
 
 ### `backend-pre-merge-reviewer`
-**What it does:** Rigorous pre-merge review of backend code — traces the full
-request lifecycle, checks auth gaps, race conditions, partial failures, contract
-drift, secret handling, and error handling. Assumes the code was AI-generated and
-reviews accordingly. Produces a structured findings report with MUST FIX / SHOULD FIX / NIT tiering and a final verdict.
+**What it does:** Parallel modular backend review — dispatches independent review modules simultaneously, each gated on a signal in the diff (async/messaging patterns → messaging module; `synchronized`/`volatile` → concurrency module; migration files → DB migrations module; new endpoints → API contracts module). Always runs correctness, error handling, security, and style. Falls back to targeted file reads for large diffs. Finishes with an interactive Q&A step and an explicit evaluation of whether acceptance/integration tests are needed. Produces a structured report with MUST FIX / SHOULD FIX / NIT tiering.
 
 **When to use:** Before merging any backend change that touches auth, data access,
 API contracts, or business logic. Called automatically by `implement`.
@@ -246,11 +245,26 @@ backend risk.
 
 ---
 
+### `post-rebase-verify`
+**What it does:** 6-step checklist to run after any rebase that required manual conflict resolution: diff stat sanity check, grep for intentional additions you named upfront (TODOs, constants, annotations), interface/implementation parity, structured file consistency (package manifests, DI configs, lock files), conflict marker scan, final diff review. Catches silent drops — missing methods, duplicate entries, lost TODOs — that only surface when a reviewer asks or a build fails.
+
+**When to use:** After any rebase with manual conflict resolution, before re-requesting review.
+
+**Trigger phrases:** "post-rebase check", "verify rebase", "check after rebasing", "did anything get dropped"
+
+---
+
+### `review-loop`
+**What it does:** Iterates on AI reviewer feedback until zero open comments or the 5-cycle limit is hit. Classifies each comment by type (correctness, test-coverage, simplification, type-design, documentation, style, security) and scores fix confidence 0–100. High confidence (≥70) → fix directly; low confidence → reply with reasoning first. Detects flip-flops (same pattern re-commented in a later cycle) and surfaces them to you instead of reverting. Adds preemptive intent comments when making non-obvious fixes. Maintains a learned-patterns file to avoid repeating confirmed false positives across cycles.
+
+**When to use:** After opening a PR and receiving AI review comments. Run this instead of manually addressing each comment.
+
+**Trigger phrases:** "loop on review comments", "address review", "iterate on PR feedback", "keep going until reviewer is happy"
+
+---
+
 ### `security-auditor`
-**What it does:** Multi-pass adversarial security audit. Every finding requires ≥8/10
-confidence and a concrete exploit scenario — specific inputs, attacker position, what
-breaks. Plausible-but-vague concerns go in a separate low-confidence section. Produces
-a versioned cumulative report across passes.
+**What it does:** Adversarial security audit with an infrastructure-first phase ordering. Starts with an attack surface census (public endpoints, admin routes, file uploads, background jobs, CI workflows, container configs), then reviews secrets → supply chain → CI/CD → infrastructure → application code → OWASP. After confirming a finding, auto-searches for the same pattern across all files. Includes incident response playbooks for leaked secrets. Every finding requires ≥8/10 confidence and a concrete exploit scenario — specific inputs, attacker position, what breaks. Can save reports to `.security-reports/` for trend tracking (Resolved/Persistent/New) across runs.
 
 **When to use:** Before shipping anything security-sensitive, after adding auth,
 when integrating third-party services, or as a dedicated security sprint. Called
@@ -389,6 +403,8 @@ creating architecture documentation.
 
 ```
 1. implement         → context confirm → search → architecture lock → TDD → review → your sign-off → ship
+2. review-loop       → after opening PR, iterate on AI review comments until clean
+3. post-rebase-verify → after any rebase with conflicts, before re-requesting review
 ```
 
 ### Blank-slate feature (no spec yet)

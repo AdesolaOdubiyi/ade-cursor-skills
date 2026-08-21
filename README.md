@@ -51,7 +51,7 @@ Remove any skills you don't need after the agent runs.
 | Skill | Purpose |
 |---|---|
 | `architecture-and-api` | Module structure and API design |
-| `backend-pre-merge-reviewer` | Pre-merge backend code review with MUST FIX / SHOULD FIX / NIT tiering |
+| `backend-pre-merge-reviewer` | Parallel modular backend code review with signal-based module activation and MUST FIX / SHOULD FIX / NIT tiering |
 | `caveman` | Ultra-brief communication mode |
 | `clean-code-reviewer` | Clean code standards review |
 | `debugging-systematic` | Structured bug diagnosis |
@@ -65,7 +65,9 @@ Remove any skills you don't need after the agent runs.
 | `python-top-down` | Enforce top-down Python module ordering |
 | `python-type-discipline` | Python typing standards |
 | `readme-writer` | README generation |
-| `security-auditor` | Adversarial multi-pass security audit (≥8/10 confidence threshold) |
+| `post-rebase-verify` | 6-step checklist after any rebase with manual conflict resolution |
+| `review-loop` | AI review iteration loop: comment classification, confidence scoring, flip-flop detection, 5-cycle limit |
+| `security-auditor` | Adversarial security audit: attack surface census, infrastructure-first phases, variant analysis, incident response playbooks (≥8/10 confidence threshold) |
 | `stop-slop` | Remove AI writing patterns from prose |
 | `systems-design` | Systems design with trade-off analysis and pushback protocol |
 | `tdd` | Test-driven development loop |
